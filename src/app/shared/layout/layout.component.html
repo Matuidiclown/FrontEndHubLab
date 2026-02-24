@@ -1,0 +1,101 @@
+<!-- src/app/shared/layout/layout.component.html -->
+<div class="app-shell" [class.sidebar-collapsed]="sidebarCollapsed()">
+
+  <!-- SIDEBAR (desktop + tablet) -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <div class="logo-icon"><fa-icon [icon]="faPlane" /></div>
+        @if (!sidebarCollapsed()) { <span class="logo-text">LAP EXTRA</span> }
+      </div>
+      <button class="collapse-btn" (click)="toggleSidebar()">
+        <fa-icon [icon]="sidebarCollapsed() ? faChevronRight : faChevronLeft" />
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a routerLink="/app/home" routerLinkActive="active" class="nav-item"
+         [matTooltip]="sidebarCollapsed() ? 'Home' : ''" matTooltipPosition="right">
+        <fa-icon [icon]="faHouse" />
+        @if (!sidebarCollapsed()) { <span>Home</span> }
+      </a>
+      <a routerLink="/app/reportes" routerLinkActive="active" class="nav-item"
+         [matTooltip]="sidebarCollapsed() ? 'Reportes' : ''" matTooltipPosition="right">
+        <fa-icon [icon]="faChartLine" />
+        @if (!sidebarCollapsed()) { <span>Reportes</span> }
+      </a>
+      <a routerLink="/app/profile" routerLinkActive="active" class="nav-item"
+         [matTooltip]="sidebarCollapsed() ? 'Mi Perfil' : ''" matTooltipPosition="right">
+        <fa-icon [icon]="faUser" />
+        @if (!sidebarCollapsed()) { <span>Mi Perfil</span> }
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="avatar-sm">{{ userInitials }}</div>
+        @if (!sidebarCollapsed()) {
+          <div class="user-meta">
+            <span class="user-name">{{ currentUser()?.apellido }}, {{ currentUser()?.nombre }}</span>
+            <span class="user-role">{{ currentUser()?.rol }}</span>
+          </div>
+        }
+      </div>
+      <div class="footer-actions">
+        <a routerLink="/app/profile" class="footer-btn" matTooltip="Mi Perfil" matTooltipPosition="right">
+          <fa-icon [icon]="faUser" />
+        </a>
+        <button class="footer-btn logout" (click)="logout()" matTooltip="Cerrar Sesión" matTooltipPosition="right">
+          <fa-icon [icon]="faRightFromBracket" />
+        </button>
+      </div>
+      @if (!sidebarCollapsed()) {
+        <p class="version">Versión 1.0.0</p>
+      }
+    </div>
+  </aside>
+
+  <!-- MAIN AREA -->
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="topbar-brand">
+        <fa-icon [icon]="faPlane" />
+        <span>LAP EXTRA</span>
+      </div>
+      <div class="search-box">
+        <fa-icon [icon]="faMagnifyingGlass" class="search-icon" />
+        <input type="text" [(ngModel)]="searchQuery" placeholder="Buscar..." />
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" matTooltip="Notificaciones">
+          <fa-icon [icon]="faBell" />
+        </button>
+      </div>
+    </header>
+
+    <main class="content">
+      <router-outlet />
+    </main>
+  </div>
+
+  <!-- BOTTOM NAV (solo mobile) -->
+  <nav class="bottom-nav">
+    <a routerLink="/app/home" routerLinkActive="active" class="bottom-nav-item">
+      <fa-icon [icon]="faHouse" />
+      <span>Home</span>
+    </a>
+    <a routerLink="/app/reportes" routerLinkActive="active" class="bottom-nav-item">
+      <fa-icon [icon]="faChartLine" />
+      <span>Reportes</span>
+    </a>
+    <a routerLink="/app/profile" routerLinkActive="active" class="bottom-nav-item">
+      <fa-icon [icon]="faUser" />
+      <span>Perfil</span>
+    </a>
+    <button class="bottom-nav-item" (click)="logout()">
+      <fa-icon [icon]="faRightFromBracket" />
+      <span>Salir</span>
+    </button>
+  </nav>
+
+</div>

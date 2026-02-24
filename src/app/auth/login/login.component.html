@@ -1,0 +1,70 @@
+<!-- src/app/auth/login/login.component.html -->
+<div class="login-wrapper">
+
+  <!-- Panel izquierdo: solo desktop -->
+  <div class="login-left">
+    <div class="brand">
+      <div class="brand-icon"><fa-icon [icon]="faPlane" /></div>
+      <span class="brand-name">LAP EXTRA</span>
+    </div>
+    <div class="hero-text">
+      <h1>Lima Airport<br /><span>Partners</span></h1>
+      <p>Plataforma de gestión interna para colaboradores del Aeropuerto Internacional Jorge Chávez.</p>
+    </div>
+    <div class="decor-circles">
+      <div class="circle c1"></div>
+      <div class="circle c2"></div>
+      <div class="circle c3"></div>
+    </div>
+  </div>
+
+  <!-- Panel derecho: formulario -->
+  <div class="login-right">
+    <div class="login-card">
+
+      <!-- Logo visible solo en tablet/mobile -->
+      <div class="mobile-brand">
+        <div class="mobile-brand-icon"><fa-icon [icon]="faPlane" /></div>
+        <span class="mobile-brand-name">LAP EXTRA</span>
+      </div>
+
+      <div class="card-header">
+        <h2>Iniciar Sesión</h2>
+        <p>Ingrese sus credenciales corporativas</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form" novalidate>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Correo electrónico</mat-label>
+          <input matInput formControlName="email" type="email" placeholder="usuario@lima-airport.com" />
+          <span matPrefix class="input-icon"><fa-icon [icon]="faEnvelope" /></span>
+          <mat-error>{{ emailError }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Contraseña</mat-label>
+          <input matInput formControlName="password" [type]="showPassword ? 'text' : 'password'" placeholder="••••••••" />
+          <span matPrefix class="input-icon"><fa-icon [icon]="faLock" /></span>
+          <button type="button" matSuffix class="toggle-pass" (click)="togglePassword()">
+            <fa-icon [icon]="showPassword ? faEyeSlash : faEye" />
+          </button>
+          <mat-error>{{ passwordError }}</mat-error>
+        </mat-form-field>
+
+        <button mat-raised-button type="submit" class="submit-btn" [disabled]="loading">
+          @if (loading) {
+            <mat-spinner diameter="20" />
+            <span>Autenticando...</span>
+          } @else {
+            <span>Ingresar</span>
+          }
+        </button>
+
+      </form>
+
+      <p class="footer-note">© 2026 - Lima Airport Partners</p>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,96 @@
+<!-- src/app/pages/profile/profile.component.html -->
+<div class="profile-page">
+  <h2 class="page-title">Mi Perfil</h2>
+
+  <div class="profile-grid">
+
+    <!-- LEFT: Avatar Card -->
+    <div class="avatar-card">
+      <div class="avatar-container">
+        @if (avatarPreview()) {
+          <img [src]="avatarPreview()" alt="Avatar" class="avatar-img" />
+        } @else {
+          <div class="avatar-placeholder">{{ userInitials }}</div>
+        }
+        <label class="avatar-upload" matTooltip="Cambiar foto">
+          <input type="file" accept="image/*" hidden (change)="onAvatarChange($event)" />
+          <fa-icon [icon]="faCamera" />
+        </label>
+      </div>
+
+      <h3 class="user-full-name">
+        {{ currentUser()?.apellido }}, {{ currentUser()?.nombre }}
+      </h3>
+      <p class="user-email">{{ currentUser()?.email }}</p>
+
+      <span class="role-badge">{{ currentUser()?.rol || 'Usuario' }}</span>
+    </div>
+
+    <!-- RIGHT: Form Card -->
+    <div class="form-card">
+      <div class="form-card-header">
+        <fa-icon [icon]="faCircleUser" class="header-icon" />
+        <h3>Información Personal</h3>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSave()" class="info-form">
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="nombre" />
+            <mat-error>El nombre es requerido</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Apellido</mat-label>
+            <input matInput formControlName="apellido" />
+            <mat-error>El apellido es requerido</mat-error>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" />
+        </mat-form-field>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Teléfono</mat-label>
+            <input matInput formControlName="telefono" type="tel" placeholder="+51 999 999 999" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha de Nacimiento</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="fechaNacimiento" />
+            <mat-datepicker-toggle matSuffix [for]="picker" />
+            <mat-datepicker #picker />
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Biografía</mat-label>
+          <textarea matInput formControlName="biografia" rows="3" placeholder="Describe tu rol o área..."></textarea>
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button mat-raised-button type="submit" class="save-btn" [disabled]="saving()">
+            @if (saving()) {
+              <mat-spinner diameter="18" />
+              <span>Guardando...</span>
+            } @else {
+              <fa-icon [icon]="faSave" />
+              <span>Guardar Cambios</span>
+            }
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+
+  <footer class="page-footer">
+    © 2026 - Lima Airport Partners
+  </footer>
+</div>

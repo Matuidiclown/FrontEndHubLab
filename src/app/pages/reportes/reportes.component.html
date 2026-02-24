@@ -1,0 +1,244 @@
+<!-- src/app/pages/reportes/reportes.component.html -->
+<div class="reportes-page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="page-title-group">
+      <h2 class="page-title">
+        <fa-icon [icon]="faChartLine" class="title-icon" />
+        Reportes
+      </h2>
+      <p class="page-sub">Métricas y estadísticas operativas</p>
+    </div>
+
+    <div class="header-actions">
+      <!-- Filtro Periodo -->
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Período</mat-label>
+        <mat-select [(value)]="periodoSeleccionado">
+          @for (p of periodos; track p.value) {
+            <mat-option [value]="p.value">{{ p.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Filtro Área -->
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Área</mat-label>
+        <mat-select [(value)]="areaSeleccionada">
+          @for (a of areas; track a.value) {
+            <mat-option [value]="a.value">{{ a.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-raised-button class="btn-export" (click)="exportar()" matTooltip="Exportar">
+        <fa-icon [icon]="faFileArrowDown" />
+        <span>Exportar</span>
+      </button>
+
+      <button mat-stroked-button class="btn-print" (click)="imprimir()" matTooltip="Imprimir">
+        <fa-icon [icon]="faPrint" />
+      </button>
+    </div>
+  </div>
+
+  <!-- KPI CARDS -->
+  <div class="kpi-row">
+    @for (kpi of kpis; track kpi.label) {
+      <div class="kpi-card">
+        <div class="kpi-icon-wrap" [style.background]="kpi.color + '18'">
+          <fa-icon [icon]="kpi.icon" [style.color]="kpi.color" />
+        </div>
+        <div class="kpi-body">
+          <p class="kpi-label">{{ kpi.label }}</p>
+          <div class="kpi-value-row">
+            <span class="kpi-value">{{ kpi.value }}</span>
+            <span class="kpi-trend" [class.up]="kpi.trend > 0" [class.down]="kpi.trend < 0">
+              <fa-icon [icon]="kpi.trend > 0 ? faArrowTrendUp : faArrowTrendDown" />
+              {{ kpi.trend > 0 ? '+' : '' }}{{ kpi.trend }}%
+            </span>
+          </div>
+          <span class="kpi-sub">{{ kpi.sub }}</span>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- CHARTS ROW -->
+  <div class="charts-row">
+
+    <!-- Barras por área -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3><fa-icon [icon]="faChartBar" /> Tickets por Área</h3>
+        <span class="chart-period">Enero 2026</span>
+      </div>
+      <div class="bar-chart">
+        @for (b of barras; track b.label) {
+          <div class="bar-row">
+            <span class="bar-label">{{ b.label }}</span>
+            <div class="bar-track">
+              <div class="bar-fill" [style.width.%]="b.value" [style.background]="b.color"></div>
+            </div>
+            <span class="bar-val">{{ b.value }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Sparkline tendencia -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3><fa-icon [icon]="faChartLine" /> Tendencia Semanal</h3>
+        <span class="chart-period">Últimos 7 días</span>
+      </div>
+      <div class="spark-wrap">
+        <svg viewBox="0 0 100 110" preserveAspectRatio="none" class="sparkline-svg">
+          <!-- Grid lines -->
+          <line x1="0" y1="25"  x2="100" y2="25"  class="grid-line"/>
+          <line x1="0" y1="50"  x2="100" y2="50"  class="grid-line"/>
+          <line x1="0" y1="75"  x2="100" y2="75"  class="grid-line"/>
+          <!-- Area fill -->
+          <polyline [attr.points]="'0,' + sparkY(sparkValues[0]) + ' ' + sparkPoints() + ' 100,100 0,100'"
+                    class="spark-area" />
+          <!-- Line -->
+          <polyline [attr.points]="sparkPoints()" class="spark-line" />
+          <!-- Dots -->
+          @for (v of sparkValues; track $index) {
+            <circle
+              [attr.cx]="$index * (100 / (sparkValues.length - 1))"
+              [attr.cy]="sparkY(v)"
+              r="2.5"
+              class="spark-dot"
+            />
+          }
+        </svg>
+        <div class="spark-labels">
+          @for (v of sparkValues; track $index) {
+            <span>{{ ['L','M','X','J','V','S','D'][$index] }}</span>
+          }
+        </div>
+      </div>
+      <div class="spark-stats">
+        <div class="spark-stat">
+          <span class="ss-val">{{ sparkValues[sparkValues.length - 1] }}</span>
+          <span class="ss-label">Hoy</span>
+        </div>
+        <div class="spark-stat">
+          <span class="ss-val">{{ sparkMax }}</span>
+          <span class="ss-label">Máximo</span>
+        </div>
+        <div class="spark-stat">
+          <span class="ss-val">{{ sparkAverage }}</span>
+          <span class="ss-label">Promedio</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dona de estados -->
+    <div class="chart-card dona-card">
+      <div class="chart-header">
+        <h3><fa-icon [icon]="faChartPie" /> Estado de Reportes</h3>
+        <span class="chart-period">General</span>
+      </div>
+      <div class="dona-wrap">
+        <svg viewBox="0 0 100 100" class="dona-svg">
+          @for (seg of donaSegments(); track seg.label) {
+            <circle
+              cx="50" cy="50" r="30"
+              fill="none"
+              [attr.stroke]="seg.color"
+              stroke-width="14"
+              [attr.stroke-dasharray]="seg.dasharray"
+              [attr.transform]="'rotate(' + (seg.rotation - 90) + ' 50 50)'"
+              stroke-linecap="butt"
+            />
+          }
+          <text x="50" y="47" text-anchor="middle" class="dona-center-val">{{ donaTotal() }}</text>
+          <text x="50" y="57" text-anchor="middle" class="dona-center-sub">total</text>
+        </svg>
+
+        <div class="dona-legend">
+          @for (d of donaData; track d.label) {
+            <div class="legend-item">
+              <span class="legend-dot" [style.background]="d.color"></span>
+              <span class="legend-label">{{ d.label }}</span>
+              <span class="legend-pct">{{ d.value }}%</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-card">
+    <div class="table-header">
+      <h3>Detalle de Reportes</h3>
+      <div class="table-search">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Buscar reporte...</mat-label>
+          <input matInput [(ngModel)]="filtroTexto" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="rep-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Tipo</th>
+            <th>Área</th>
+            <th>Responsable</th>
+            <th>Fecha</th>
+            <th>Progreso</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (r of reportesFiltrados(); track r.id) {
+            <tr>
+              <td class="id-cell">{{ r.id }}</td>
+              <td>{{ r.tipo }}</td>
+              <td>{{ r.area }}</td>
+              <td>{{ r.responsable }}</td>
+              <td>{{ r.fecha }}</td>
+              <td class="progress-cell">
+                <div class="progress-bar">
+                  <div class="progress-fill"
+                       [style.width.%]="r.progreso"
+                       [class.full]="r.progreso === 100"
+                       [class.mid]="r.progreso > 0 && r.progreso < 100"
+                       [class.zero]="r.progreso === 0">
+                  </div>
+                </div>
+                <span class="progress-label">{{ r.progreso }}%</span>
+              </td>
+              <td>
+                <span class="estado-badge" [class]="r.estado === 'Completado' ? 'success' : r.estado === 'En proceso' ? 'info' : 'warning'">
+                  @if (r.estado === 'Completado') { <fa-icon [icon]="faCircleCheck" /> }
+                  @if (r.estado === 'En proceso') { <fa-icon [icon]="faHourglass" /> }
+                  @if (r.estado === 'Pendiente')  { <fa-icon [icon]="faTriangleExclamation" /> }
+                  {{ r.estado }}
+                </span>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7" class="empty-row">No se encontraron resultados para "{{ filtroTexto }}"</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-footer">
+      <span>{{ reportesFiltrados().length }} de {{ reportes.length }} registros</span>
+    </div>
+  </div>
+
+  <footer class="page-footer">© 2026 - Lima Airport Partners</footer>
+</div>

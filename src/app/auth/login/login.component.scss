@@ -1,0 +1,255 @@
+// src/app/auth/login/login.component.scss
+.login-wrapper {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+// ── LEFT PANEL ──────────────────────────────────────────
+.login-left {
+  width: 45%;
+  background: linear-gradient(135deg, #1a0533 0%, #3b1a6b 45%, #5b2d8e 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 3rem 4rem;
+  position: relative;
+  overflow: hidden;
+
+  // Tablet: ocultar panel izquierdo
+  @media (max-width: 900px) {
+    display: none;
+  }
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 3rem;
+
+  .brand-icon {
+    width: 42px;
+    height: 42px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.2rem;
+    backdrop-filter: blur(8px);
+  }
+
+  .brand-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 2px;
+  }
+}
+
+.hero-text {
+  h1 {
+    font-size: 3rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.9);
+    line-height: 1.15;
+    margin: 0 0 1.5rem;
+
+    span { font-weight: 700; color: #fff; }
+  }
+
+  p {
+    color: rgba(255,255,255,0.65);
+    font-size: 1rem;
+    line-height: 1.6;
+    max-width: 340px;
+  }
+}
+
+.decor-circles {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+
+  .circle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .c1 { width: 350px; height: 350px; bottom: -80px; right: -80px; }
+  .c2 { width: 200px; height: 200px; top: 60px; right: 20px; }
+  .c3 { width: 100px; height: 100px; top: 200px; left: 30px; }
+}
+
+// ── RIGHT PANEL ──────────────────────────────────────────
+.login-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f8;
+  padding: 2rem;
+
+  // Mobile: fondo con gradiente para compensar que no hay panel izquierdo
+  @media (max-width: 900px) {
+    background: linear-gradient(160deg, #1a0533 0%, #3b1a6b 40%, #f5f5f8 70%);
+    align-items: flex-start;
+    padding-top: 3rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 1.5rem 1rem;
+    padding-top: 2.5rem;
+  }
+}
+
+.login-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 3rem 2.5rem;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 8px 40px rgba(108, 63, 197, 0.12);
+
+  @media (max-width: 900px) {
+    // En tablet/mobile mostrar logo dentro de la card
+    .card-header {
+      text-align: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 2rem 1.25rem;
+    border-radius: 16px;
+  }
+}
+
+// Logo visible solo en mobile (dentro de card)
+.mobile-brand {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.75rem;
+
+  @media (max-width: 900px) {
+    display: flex;
+  }
+
+  .mobile-brand-icon {
+    width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, #5b2d8e, #3b1a6b);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.4rem;
+    box-shadow: 0 4px 16px rgba(108, 63, 197, 0.35);
+  }
+
+  .mobile-brand-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #3b1a6b;
+    letter-spacing: 2px;
+  }
+}
+
+.card-header {
+  margin-bottom: 2rem;
+
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1a0533;
+    margin: 0 0 0.5rem;
+
+    @media (max-width: 480px) {
+      font-size: 1.5rem;
+    }
+  }
+
+  p {
+    color: #888;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.full-width { width: 100%; }
+
+.input-icon {
+  color: #aaa;
+  margin-right: 8px;
+  font-size: 0.9rem;
+}
+
+.toggle-pass {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #aaa;
+  padding: 0;
+  line-height: 1;
+  font-size: 0.9rem;
+
+  &:hover { color: #6c3fc5; }
+}
+
+.submit-btn {
+  margin-top: 1rem;
+  height: 52px;
+  background: linear-gradient(135deg, #5b2d8e, #3b1a6b) !important;
+  color: #fff !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  border-radius: 10px !important;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: opacity 0.2s;
+  width: 100%;
+
+  &:hover:not(:disabled) { opacity: 0.9; }
+  &:disabled { opacity: 0.7; }
+
+  mat-spinner { --mdc-circular-progress-active-indicator-color: #fff; }
+}
+
+.footer-note {
+  text-align: center;
+  color: #bbb;
+  font-size: 0.8rem;
+  margin: 1.5rem 0 0;
+}
+
+::ng-deep {
+  .mat-mdc-form-field-subscript-wrapper { margin-top: -4px; }
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__trailing,
+  .mdc-notched-outline__notch {
+    border-color: #e0e0e0 !important;
+  }
+  .mdc-notched-outline--upgraded .mdc-notched-outline__leading,
+  .mdc-notched-outline--upgraded .mdc-notched-outline__trailing,
+  .mdc-notched-outline--upgraded .mdc-notched-outline__notch {
+    border-color: #6c3fc5 !important;
+  }
+}
